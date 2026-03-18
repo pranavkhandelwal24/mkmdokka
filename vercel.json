@@ -3,6 +3,7 @@
   "builds": [
     {
       "src": "index.html",
+      "src": "privacy.html",
       "use": "@vercel/static"
     }
   ],
