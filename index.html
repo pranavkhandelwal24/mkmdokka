@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HUB — Time to Explore!</title>
+  <title>HubInc — Time to Explore!</title>
+  <link rel="icon" type="image/png" href="character.png" />
+  <link rel="apple-touch-icon" href="character.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
@@ -25,7 +27,6 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -36,7 +37,6 @@
       min-height: 100vh;
     }
 
-    /* ── STARFIELD ── */
     #stars-canvas {
       position: fixed;
       inset: 0;
@@ -44,13 +44,10 @@
       pointer-events: none;
     }
 
-    /* ── CLOUD LAYER ── */
     .cloud-layer {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 45%;
+      bottom: 0; left: 0;
+      width: 100%; height: 45%;
       z-index: 1;
       pointer-events: none;
       background:
@@ -59,42 +56,49 @@
         radial-gradient(ellipse 80% 40% at 50% 120%, rgba(20,45,90,0.7) 0%, transparent 60%);
     }
 
-    /* ── LAYOUT ── */
-    .page-wrapper {
-      position: relative;
-      z-index: 2;
-    }
+    .page-wrapper { position: relative; z-index: 2; }
 
     /* ── NAV ── */
     nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 24px 60px;
+      padding: 18px 60px;
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(5, 13, 26, 0.7);
+      background: rgba(5, 13, 26, 0.75);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(74,158,255,0.08);
     }
 
     .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-family: 'Syne', sans-serif;
       font-size: 22px;
       font-weight: 800;
       letter-spacing: 4px;
       color: #fff;
+      text-decoration: none;
     }
 
-    .nav-logo span {
-      color: var(--accent-orange);
+    .nav-logo img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 8px rgba(74,158,255,0.5));
     }
+
+    .nav-logo span { color: var(--accent-orange); }
 
     .nav-links {
       display: flex;
-      gap: 36px;
+      gap: 32px;
       list-style: none;
+      align-items: center;
     }
 
     .nav-links a {
@@ -109,16 +113,12 @@
     .nav-links a:hover { color: #fff; }
 
     .nav-cta {
-      background: linear-gradient(135deg, var(--accent-orange), var(--accent-orange-soft));
+      background: linear-gradient(135deg, var(--accent-orange), var(--accent-orange-soft)) !important;
       color: #fff !important;
-      padding: 10px 24px;
-      border-radius: 50px;
+      padding: 10px 24px !important;
+      border-radius: 50px !important;
       font-weight: 600 !important;
-      font-size: 13px !important;
-      transition: opacity 0.2s, transform 0.2s !important;
     }
-
-    .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
 
     /* ── HERO ── */
     .hero {
@@ -134,11 +134,9 @@
 
     .hero-glow {
       position: absolute;
-      top: 20%;
-      left: 50%;
+      top: 20%; left: 50%;
       transform: translateX(-50%);
-      width: 600px;
-      height: 600px;
+      width: 600px; height: 600px;
       background: radial-gradient(circle, rgba(74,158,255,0.08) 0%, transparent 65%);
       pointer-events: none;
     }
@@ -164,15 +162,19 @@
       line-height: 1.5;
     }
 
+    /* ✅ Dokka character image — hero */
     .dokka-sprite {
-      font-size: 56px;
-      filter: drop-shadow(0 0 20px rgba(74,158,255,0.4));
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 22px rgba(74,158,255,0.5));
       animation: dokkaFloat 3s ease-in-out infinite;
     }
 
     @keyframes dokkaFloat {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-10px); }
     }
 
     .hero-badge {
@@ -193,8 +195,7 @@
     }
 
     .badge-dot {
-      width: 6px;
-      height: 6px;
+      width: 6px; height: 6px;
       background: var(--accent-orange);
       border-radius: 50%;
       animation: pulse 2s infinite;
@@ -216,10 +217,7 @@
     }
 
     .hero h1 .hub { color: #fff; }
-    .hero h1 .inc {
-      color: var(--accent-orange);
-      position: relative;
-    }
+    .hero h1 .inc { color: var(--accent-orange); }
 
     .hero-sub {
       font-size: 18px;
@@ -275,10 +273,7 @@
       box-shadow: 0 8px 32px rgba(245,166,35,0.3);
     }
 
-    .dl-btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 40px rgba(245,166,35,0.45);
-    }
+    .dl-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(245,166,35,0.45); }
 
     .dl-btn-secondary {
       background: rgba(255,255,255,0.05);
@@ -287,25 +282,16 @@
       backdrop-filter: blur(10px);
     }
 
-    .dl-btn-secondary:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.25);
-      transform: translateY(-3px);
-    }
+    .dl-btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); transform: translateY(-3px); }
 
     .dl-btn-icon { font-size: 22px; }
-
     .dl-btn-text { text-align: left; }
     .dl-btn-text small { display: block; font-size: 10px; font-weight: 400; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.8px; }
     .dl-btn-text strong { font-size: 15px; }
 
-    .version-tag {
-      font-size: 12px;
-      color: var(--text-muted);
-      letter-spacing: 0.5px;
-    }
+    .version-tag { font-size: 12px; color: var(--text-muted); letter-spacing: 0.5px; }
 
-    /* ── PHONE MOCKUP ── */
+    /* ── PHONE MOCKUPS ── */
     .mockup-section {
       display: flex;
       justify-content: center;
@@ -315,16 +301,12 @@
     }
 
     .phone-frame {
-      width: 240px;
-      height: 480px;
+      width: 240px; height: 480px;
       border-radius: 36px;
       border: 2px solid rgba(74,158,255,0.2);
       background: var(--navy-mid);
       overflow: hidden;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.04),
-        0 40px 80px rgba(0,0,0,0.6),
-        0 0 60px rgba(74,158,255,0.06);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(74,158,255,0.06);
       position: relative;
       transition: transform 0.4s ease;
     }
@@ -336,8 +318,7 @@
     .phone-frame:nth-child(3):hover { transform: translateY(7px) rotate(-0.5deg); }
 
     .phone-screen {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -350,24 +331,12 @@
 
     .ps-clouds {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 40%;
+      bottom: 0; left: 0;
+      width: 100%; height: 40%;
       background: radial-gradient(ellipse 150% 80% at 50% 130%, rgba(12,30,65,0.9) 0%, transparent 70%);
     }
 
-    /* Screen 1 - Login */
-    .ps-login-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      margin-bottom: 4px;
-      position: relative;
-      z-index: 2;
-    }
-
+    .ps-login-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: 3px; margin-bottom: 4px; position: relative; z-index: 2; }
     .ps-login-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 16px; position: relative; z-index: 2; }
 
     .ps-bubble {
@@ -383,7 +352,19 @@
       align-self: flex-start;
     }
 
-    .ps-mini-dokka { font-size: 28px; position: relative; z-index: 2; align-self: flex-end; margin-top: -20px; margin-bottom: 12px; }
+    /* ✅ Dokka inside phone mockup */
+    .ps-mini-dokka {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      position: relative;
+      z-index: 2;
+      align-self: flex-end;
+      margin-top: -16px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 6px rgba(74,158,255,0.4));
+    }
 
     .ps-field {
       width: 100%;
@@ -413,125 +394,36 @@
       z-index: 2;
     }
 
-    /* Screen 2 - Home */
-    .ps-home-header {
-      align-self: flex-start;
-      position: relative;
-      z-index: 2;
-      margin-bottom: 12px;
-    }
-
+    .ps-home-header { align-self: flex-start; position: relative; z-index: 2; margin-bottom: 12px; }
     .ps-home-header h3 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; }
     .ps-home-header p { font-size: 9px; color: var(--accent-orange); }
 
-    .ps-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      width: 100%;
-      position: relative;
-      z-index: 2;
-      margin-bottom: 12px;
-    }
-
-    .ps-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 10px;
-      font-size: 9px;
-    }
-
+    .ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; position: relative; z-index: 2; margin-bottom: 12px; }
+    .ps-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px; font-size: 9px; }
     .ps-card-icon { font-size: 16px; margin-bottom: 4px; }
     .ps-card-label { color: var(--text-secondary); }
     .ps-card-val { font-weight: 700; font-size: 11px; }
 
     .ps-actions-label { font-size: 9px; font-weight: 600; color: var(--text-muted); align-self: flex-start; position: relative; z-index: 2; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
-
-    .ps-action-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      width: 100%;
-      position: relative;
-      z-index: 2;
-    }
-
-    .ps-action {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      padding: 10px;
-      text-align: center;
-    }
-
+    .ps-action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; position: relative; z-index: 2; }
+    .ps-action { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 10px; text-align: center; }
     .ps-action-icon { font-size: 18px; display: block; margin-bottom: 4px; }
     .ps-action-name { font-size: 9px; color: var(--text-secondary); }
 
-    /* Screen 3 - Timetable */
-    .ps-tt-header {
-      align-self: flex-start;
-      position: relative;
-      z-index: 2;
-      margin-bottom: 12px;
-    }
-
+    .ps-tt-header { align-self: flex-start; position: relative; z-index: 2; margin-bottom: 12px; }
     .ps-tt-header h3 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; }
     .ps-tt-header p { font-size: 8px; color: var(--text-muted); }
 
-    .ps-tt-card {
-      width: 100%;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 10px;
-      position: relative;
-      z-index: 2;
-      margin-bottom: 8px;
-    }
-
-    .ps-tt-badge {
-      display: inline-block;
-      background: var(--accent-orange);
-      border-radius: 6px;
-      padding: 2px 6px;
-      font-size: 7px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
+    .ps-tt-card { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px; position: relative; z-index: 2; margin-bottom: 8px; }
+    .ps-tt-badge { display: inline-block; background: var(--accent-orange); border-radius: 6px; padding: 2px 6px; font-size: 7px; font-weight: 700; margin-bottom: 4px; }
     .ps-tt-subject { font-size: 12px; font-weight: 700; }
     .ps-tt-info { font-size: 8px; color: var(--text-muted); margin-top: 2px; }
 
     /* ── FEATURES ── */
-    .features {
-      padding: 80px 60px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: var(--accent-orange);
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(32px, 4vw, 52px);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 60px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
+    .features { padding: 80px 60px; max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 12px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-orange); font-weight: 600; margin-bottom: 12px; }
+    .section-title { font-family: 'Syne', sans-serif; font-size: clamp(32px, 4vw, 52px); font-weight: 800; line-height: 1.1; margin-bottom: 60px; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
 
     .feat-card {
       background: var(--glass-bg);
@@ -552,100 +444,27 @@
       background: linear-gradient(90deg, transparent, rgba(74,158,255,0.4), transparent);
     }
 
-    .feat-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(74,158,255,0.3);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    }
+    .feat-card:hover { transform: translateY(-4px); border-color: rgba(74,158,255,0.3); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
 
-    .feat-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-
+    .feat-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
     .feat-icon-orange { background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.2); }
     .feat-icon-blue { background: rgba(74,158,255,0.12); border: 1px solid rgba(74,158,255,0.2); }
     .feat-icon-green { background: rgba(52,211,153,0.12); border: 1px solid rgba(52,211,153,0.2); }
     .feat-icon-purple { background: rgba(167,139,250,0.12); border: 1px solid rgba(167,139,250,0.2); }
-
-    .feat-card h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .feat-card p {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.65;
-    }
+    .feat-card h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .feat-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
 
     /* ── STATS ── */
-    .stats-section {
-      padding: 60px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 2px;
-      background: rgba(74,158,255,0.06);
-      border-radius: 24px;
-      border: 1px solid rgba(74,158,255,0.12);
-      overflow: hidden;
-    }
-
-    .stat-item {
-      padding: 40px 32px;
-      text-align: center;
-      background: var(--navy-mid);
-      transition: background 0.3s;
-    }
-
+    .stats-section { padding: 60px; max-width: 1200px; margin: 0 auto; }
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 2px; background: rgba(74,158,255,0.06); border-radius: 24px; border: 1px solid rgba(74,158,255,0.12); overflow: hidden; }
+    .stat-item { padding: 40px 32px; text-align: center; background: var(--navy-mid); transition: background 0.3s; }
     .stat-item:hover { background: rgba(74,158,255,0.05); }
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800; color: var(--accent-blue-bright); line-height: 1; }
+    .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
-    .stat-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 42px;
-      font-weight: 800;
-      color: var(--accent-blue-bright);
-      line-height: 1;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    /* ── DOWNLOAD CTA ── */
-    .cta-section {
-      padding: 80px 24px;
-      text-align: center;
-      position: relative;
-    }
-
-    .cta-glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 800px;
-      height: 400px;
-      background: radial-gradient(ellipse, rgba(245,166,35,0.05) 0%, transparent 65%);
-      pointer-events: none;
-    }
+    /* ── CTA ── */
+    .cta-section { padding: 80px 24px; text-align: center; position: relative; }
+    .cta-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; height: 400px; background: radial-gradient(ellipse, rgba(245,166,35,0.05) 0%, transparent 65%); pointer-events: none; }
 
     .cta-box {
       max-width: 680px;
@@ -658,31 +477,22 @@
       position: relative;
     }
 
-    .cta-box::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 32px;
-      background: linear-gradient(135deg, rgba(74,158,255,0.04), rgba(245,166,35,0.03));
-      pointer-events: none;
+    .cta-box::before { content: ''; position: absolute; inset: 0; border-radius: 32px; background: linear-gradient(135deg, rgba(74,158,255,0.04), rgba(245,166,35,0.03)); pointer-events: none; }
+
+    /* ✅ CTA Dokka image */
+    .cta-dokka {
+      width: 96px;
+      height: 96px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      display: block;
+      margin: 0 auto 20px;
+      filter: drop-shadow(0 0 24px rgba(74,158,255,0.5));
+      animation: dokkaFloat 3s ease-in-out infinite;
     }
 
-    .cta-dokka { font-size: 56px; margin-bottom: 16px; display: block; }
-
-    .cta-box h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: 42px;
-      font-weight: 800;
-      margin-bottom: 14px;
-      line-height: 1.1;
-    }
-
-    .cta-box p {
-      color: var(--text-secondary);
-      font-size: 16px;
-      line-height: 1.6;
-      margin-bottom: 40px;
-    }
+    .cta-box h2 { font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800; margin-bottom: 14px; line-height: 1.1; }
+    .cta-box p { color: var(--text-secondary); font-size: 16px; line-height: 1.6; margin-bottom: 40px; }
 
     /* ── FOOTER ── */
     footer {
@@ -691,36 +501,42 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: gap;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
     .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-family: 'Syne', sans-serif;
       font-size: 18px;
       font-weight: 800;
       letter-spacing: 3px;
     }
 
-    .footer-logo span { color: var(--accent-orange); }
-
-    footer p {
-      font-size: 12px;
-      color: var(--text-muted);
+    /* ✅ Footer Dokka image */
+    .footer-logo img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      image-rendering: pixelated;
     }
 
-    /* ── ANIMATIONS ── */
+    .footer-logo span { color: var(--accent-orange); }
+    footer p { font-size: 12px; color: var(--text-muted); }
+
     @keyframes floatIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav { padding: 18px 24px; }
       .nav-links { display: none; }
       .features { padding: 60px 24px; }
       .stats-section { padding: 40px 24px; }
-      footer { padding: 30px 24px; flex-direction: column; gap: 12px; text-align: center; }
+      footer { padding: 30px 24px; flex-direction: column; text-align: center; }
       .phone-frame:nth-child(2), .phone-frame:nth-child(3) { display: none; }
     }
   </style>
@@ -734,13 +550,16 @@
 
     <!-- NAV -->
     <nav>
-      <div class="nav-logo">HUB<span>INC</span></div>
+      <a href="#" class="nav-logo">
+        <img src="character.png" alt="Dokka" />
+        HUB<span>INC</span>
+      </a>
       <ul class="nav-links">
         <li><a href="#features">Features</a></li>
         <li><a href="#screenshots">Screenshots</a></li>
         <li><a href="#download">Download</a></li>
+        <li><a href="#download" class="nav-cta">Get the App</a></li>
       </ul>
-      <a href="#download" class="nav-links"><a href="#download" class="nav-cta" style="text-decoration:none;color:#fff;padding:10px 24px;border-radius:50px;font-weight:600;font-size:13px;background:linear-gradient(135deg,#f5a623,#d4780f);">Get the App</a></a>
     </nav>
 
     <!-- HERO -->
@@ -754,12 +573,11 @@
 
       <div class="dokka-bubble">
         <div class="speech-bubble">Hi! I'm Dokka.<br/>Time to Explore! 🚀</div>
-        <div class="dokka-sprite">🐾</div>
+        <!-- ✅ Real Dokka character -->
+        <img src="character.png" alt="Dokka mascot" class="dokka-sprite" />
       </div>
 
-      <h1>
-        <span class="hub">HUB</span><span class="inc">INC</span>
-      </h1>
+      <h1><span class="hub">HUB</span><span class="inc">INC</span></h1>
       <p class="hero-sub">Time to Explore!</p>
 
       <p class="hero-desc">
@@ -797,7 +615,7 @@
           <p class="ps-login-title">HUB</p>
           <p class="ps-login-sub">Time to Explore!</p>
           <div class="ps-bubble">Hi! I'm Dokka, Here to help.</div>
-          <div class="ps-mini-dokka">🐾</div>
+          <img src="character.png" alt="Dokka" class="ps-mini-dokka" />
           <div class="ps-field">🪪 Registration No.</div>
           <div class="ps-field">🔒 Password</div>
           <div class="ps-login-btn">Login</div>
@@ -813,45 +631,17 @@
             <p>Admin Panel</p>
           </div>
           <div class="ps-grid">
-            <div class="ps-card">
-              <div class="ps-card-icon">📅</div>
-              <div class="ps-card-label">Today</div>
-              <div class="ps-card-val">Wed</div>
-            </div>
-            <div class="ps-card">
-              <div class="ps-card-icon">🕐</div>
-              <div class="ps-card-label">Time</div>
-              <div class="ps-card-val">5:05 PM</div>
-            </div>
-            <div class="ps-card">
-              <div class="ps-card-icon">📝</div>
-              <div class="ps-card-label">Quick Notes</div>
-              <div class="ps-card-val">—</div>
-            </div>
-            <div class="ps-card">
-              <div class="ps-card-icon">📁</div>
-              <div class="ps-card-label">Materials</div>
-              <div class="ps-card-val">—</div>
-            </div>
+            <div class="ps-card"><div class="ps-card-icon">📅</div><div class="ps-card-label">Today</div><div class="ps-card-val">Wed</div></div>
+            <div class="ps-card"><div class="ps-card-icon">🕐</div><div class="ps-card-label">Time</div><div class="ps-card-val">5:05 PM</div></div>
+            <div class="ps-card"><div class="ps-card-icon">📝</div><div class="ps-card-label">Quick Notes</div><div class="ps-card-val">—</div></div>
+            <div class="ps-card"><div class="ps-card-icon">📁</div><div class="ps-card-label">Materials</div><div class="ps-card-val">—</div></div>
           </div>
           <p class="ps-actions-label">Quick Actions</p>
           <div class="ps-action-grid">
-            <div class="ps-action">
-              <span class="ps-action-icon">📚</span>
-              <span class="ps-action-name">Subjects</span>
-            </div>
-            <div class="ps-action">
-              <span class="ps-action-icon">🗓️</span>
-              <span class="ps-action-name">Timetable</span>
-            </div>
-            <div class="ps-action">
-              <span class="ps-action-icon">📢</span>
-              <span class="ps-action-name">Announce</span>
-            </div>
-            <div class="ps-action">
-              <span class="ps-action-icon">✅</span>
-              <span class="ps-action-name">Attendance</span>
-            </div>
+            <div class="ps-action"><span class="ps-action-icon">📚</span><span class="ps-action-name">Subjects</span></div>
+            <div class="ps-action"><span class="ps-action-icon">🗓️</span><span class="ps-action-name">Timetable</span></div>
+            <div class="ps-action"><span class="ps-action-icon">📢</span><span class="ps-action-name">Announce</span></div>
+            <div class="ps-action"><span class="ps-action-icon">✅</span><span class="ps-action-name">Attendance</span></div>
           </div>
         </div>
       </div>
@@ -887,60 +677,23 @@
     <section class="features" id="features">
       <p class="section-label">What's Inside</p>
       <h2 class="section-title">Everything you need,<br/>all in one place.</h2>
-
       <div class="features-grid">
-        <div class="feat-card">
-          <div class="feat-icon feat-icon-orange">🗓️</div>
-          <h3>Smart Timetable</h3>
-          <p>View your weekly class schedule at a glance. Know exactly where to be, when to be there, and who's teaching — all beautifully organized.</p>
-        </div>
-        <div class="feat-card">
-          <div class="feat-icon feat-icon-blue">📚</div>
-          <h3>Subject Manager</h3>
-          <p>Keep all your subjects organized by semester. Add, edit, and manage your courses from a clean, searchable interface.</p>
-        </div>
-        <div class="feat-card">
-          <div class="feat-icon feat-icon-green">✅</div>
-          <h3>Attendance Tracking</h3>
-          <p>Stay on top of your attendance. Mark, monitor, and get insights so you never fall short of the required percentage.</p>
-        </div>
-        <div class="feat-card">
-          <div class="feat-icon feat-icon-purple">📢</div>
-          <h3>Announcements</h3>
-          <p>Admins can push important notices directly to students. Never miss a critical update, exam schedule, or campus event again.</p>
-        </div>
-        <div class="feat-card">
-          <div class="feat-icon feat-icon-orange">📁</div>
-          <h3>My Materials</h3>
-          <p>Access and download your study materials securely within the app. Everything stored privately, available whenever you need it.</p>
-        </div>
-        <div class="feat-card">
-          <div class="feat-icon feat-icon-blue">📝</div>
-          <h3>Quick Notes</h3>
-          <p>Jot down ideas, reminders, and important points on the fly. Your personal scratchpad, always a tap away.</p>
-        </div>
+        <div class="feat-card"><div class="feat-icon feat-icon-orange">🗓️</div><h3>Smart Timetable</h3><p>View your weekly class schedule at a glance. Know exactly where to be, when to be there, and who's teaching — all beautifully organized.</p></div>
+        <div class="feat-card"><div class="feat-icon feat-icon-blue">📚</div><h3>Subject Manager</h3><p>Keep all your subjects organized by semester. Add, edit, and manage your courses from a clean, searchable interface.</p></div>
+        <div class="feat-card"><div class="feat-icon feat-icon-green">✅</div><h3>Attendance Tracking</h3><p>Stay on top of your attendance. Mark, monitor, and get insights so you never fall short of the required percentage.</p></div>
+        <div class="feat-card"><div class="feat-icon feat-icon-purple">📢</div><h3>Announcements</h3><p>Admins can push important notices directly to students. Never miss a critical update, exam schedule, or campus event again.</p></div>
+        <div class="feat-card"><div class="feat-icon feat-icon-orange">📁</div><h3>My Materials</h3><p>Access and download your study materials securely within the app. Everything stored privately, available whenever you need it.</p></div>
+        <div class="feat-card"><div class="feat-icon feat-icon-blue">📝</div><h3>Quick Notes</h3><p>Jot down ideas, reminders, and important points on the fly. Your personal scratchpad, always a tap away.</p></div>
       </div>
     </section>
 
     <!-- STATS -->
     <div class="stats-section">
       <div class="stats-row">
-        <div class="stat-item">
-          <div class="stat-num">6+</div>
-          <div class="stat-label">Core Features</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">2</div>
-          <div class="stat-label">User Roles</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">∞</div>
-          <div class="stat-label">Subjects Supported</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">0</div>
-          <div class="stat-label">Ads. Ever.</div>
-        </div>
+        <div class="stat-item"><div class="stat-num">6+</div><div class="stat-label">Core Features</div></div>
+        <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">User Roles</div></div>
+        <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">Subjects Supported</div></div>
+        <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">Ads. Ever.</div></div>
       </div>
     </div>
 
@@ -948,23 +701,17 @@
     <section class="cta-section">
       <div class="cta-glow"></div>
       <div class="cta-box">
-        <span class="cta-dokka">🐾</span>
+        <img src="character.png" alt="Dokka" class="cta-dokka" />
         <h2>Ready to explore?</h2>
         <p>Download HubInc today and transform the way you manage your academic life. Dokka's waiting for you.</p>
         <div class="download-buttons" style="justify-content:center;">
           <a href="#" class="dl-btn dl-btn-primary">
             <span class="dl-btn-icon">📱</span>
-            <span class="dl-btn-text">
-              <small>Download APK</small>
-              <strong>Android</strong>
-            </span>
+            <span class="dl-btn-text"><small>Download APK</small><strong>Android</strong></span>
           </a>
           <a href="#" class="dl-btn dl-btn-secondary">
             <span class="dl-btn-icon">🍎</span>
-            <span class="dl-btn-text">
-              <small>Coming Soon</small>
-              <strong>iOS</strong>
-            </span>
+            <span class="dl-btn-text"><small>Coming Soon</small><strong>iOS</strong></span>
           </a>
         </div>
       </div>
@@ -972,15 +719,17 @@
 
     <!-- FOOTER -->
     <footer>
-      <div class="footer-logo">HUB<span>INC</span></div>
+      <div class="footer-logo">
+        <img src="character.png" alt="Dokka" />
+        HUB<span>INC</span>
+      </div>
       <p>© 2026 HubInc. Built with ❤️ for students. MKM❤️</p>
-      <p style="color:var(--text-muted);font-size:12px;">Made by Pranav</p>
+      <p style="color:var(--text-muted);font-size:12px;">Made by Mitanshu</p>
     </footer>
 
   </div>
 
   <script>
-    // Starfield
     const canvas = document.getElementById('stars-canvas');
     const ctx = canvas.getContext('2d');
     let stars = [];
@@ -1014,18 +763,14 @@
       });
     }
 
-    let rafId;
     function animate(t) {
       drawStars(t / 1000);
-      rafId = requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     }
 
-    resize();
-    initStars();
-    animate(0);
+    resize(); initStars(); animate(0);
     window.addEventListener('resize', () => { resize(); initStars(); });
 
-    // Scroll reveal
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
