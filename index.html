@@ -4,500 +4,582 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HubInc — Time to Explore!</title>
-  <link rel="icon" type="image/png" href="character.png" />
-  <link rel="apple-touch-icon" href="character.png" />
+
+  <!-- Inline SVG favicon via data URI so it always works -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a1628'/%3E%3Ctext x='16' y='22' font-size='18' text-anchor='middle'%3E🐾%3C/text%3E%3C/svg%3E" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
 
   <style>
+    /* ── TOKENS ── */
     :root {
-      --navy-deep: #050d1a;
-      --navy-mid: #0a1628;
-      --navy-light: #112240;
-      --blue-glow: #1a3a6b;
-      --accent-orange: #f5a623;
-      --accent-orange-soft: #e8891a;
-      --accent-blue: #4a9eff;
-      --accent-blue-bright: #6eb5ff;
-      --glass-bg: rgba(10, 22, 40, 0.6);
-      --glass-border: rgba(74, 158, 255, 0.15);
-      --text-primary: #ffffff;
-      --text-secondary: rgba(255,255,255,0.6);
-      --text-muted: rgba(255,255,255,0.35);
+      --bg:           #060d1b;
+      --bg-mid:       #091526;
+      --bg-card:      rgba(9,21,38,0.7);
+      --border:       rgba(74,158,255,0.13);
+      --orange:       #f5a623;
+      --orange-dim:   #c97f10;
+      --blue:         #4a9eff;
+      --blue-bright:  #7ec8ff;
+      --white:        #ffffff;
+      --muted:        rgba(255,255,255,0.55);
+      --faint:        rgba(255,255,255,0.28);
+      --radius-card:  20px;
+      --max-w:        1120px;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; font-size: 16px; }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--navy-deep);
-      color: var(--text-primary);
+      background: var(--bg);
+      color: var(--white);
       overflow-x: hidden;
-      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
-    #stars-canvas {
+    /* ── STARFIELD ── */
+    #stars {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
     }
 
-    .cloud-layer {
+    /* ── CLOUD BASE ── */
+    .clouds {
       position: fixed;
       bottom: 0; left: 0;
-      width: 100%; height: 45%;
+      width: 100%; height: 40%;
       z-index: 1;
       pointer-events: none;
       background:
-        radial-gradient(ellipse 120% 60% at 20% 110%, rgba(15,35,75,0.85) 0%, transparent 70%),
-        radial-gradient(ellipse 100% 50% at 80% 115%, rgba(10,25,60,0.9) 0%, transparent 70%),
-        radial-gradient(ellipse 80% 40% at 50% 120%, rgba(20,45,90,0.7) 0%, transparent 60%);
+        radial-gradient(ellipse 130% 65% at 15% 115%, rgba(10,28,68,0.92) 0%, transparent 68%),
+        radial-gradient(ellipse 110% 55% at 85% 118%, rgba(7,20,55,0.95) 0%, transparent 68%),
+        radial-gradient(ellipse 90%  45% at 50% 122%, rgba(14,38,82,0.75) 0%, transparent 62%);
     }
 
-    .page-wrapper { position: relative; z-index: 2; }
+    /* ── WRAPPER ── */
+    .wrap {
+      position: relative;
+      z-index: 2;
+    }
 
-    /* ── NAV ── */
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ══════════════════════════════
+       NAV
+    ══════════════════════════════ */
     nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(6,13,27,0.82);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 40px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 60px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(5, 13, 26, 0.75);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(74,158,255,0.08);
     }
 
     .nav-logo {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-family: 'Syne', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: 4px;
-      color: #fff;
       text-decoration: none;
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: var(--white);
     }
 
-    .nav-logo img {
-      width: 34px;
-      height: 34px;
-      object-fit: contain;
-      image-rendering: pixelated;
-      filter: drop-shadow(0 0 8px rgba(74,158,255,0.5));
-    }
-
-    .nav-logo span { color: var(--accent-orange); }
+    .nav-logo .dokka-icon { width: 32px; height: 32px; flex-shrink: 0; }
+    .nav-logo .inc { color: var(--orange); }
 
     .nav-links {
       display: flex;
-      gap: 32px;
-      list-style: none;
       align-items: center;
+      gap: 28px;
+      list-style: none;
     }
 
     .nav-links a {
-      color: var(--text-secondary);
+      color: var(--muted);
       text-decoration: none;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 500;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
       transition: color 0.2s;
     }
+    .nav-links a:hover { color: var(--white); }
 
-    .nav-links a:hover { color: #fff; }
-
-    .nav-cta {
-      background: linear-gradient(135deg, var(--accent-orange), var(--accent-orange-soft)) !important;
-      color: #fff !important;
-      padding: 10px 24px !important;
-      border-radius: 50px !important;
+    .btn-nav {
+      padding: 9px 22px;
+      border-radius: 50px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-dim));
+      color: var(--white) !important;
       font-weight: 600 !important;
+      font-size: 13px !important;
+      transition: opacity 0.2s, transform 0.2s !important;
+      box-shadow: 0 4px 18px rgba(245,166,35,0.3);
+    }
+    .btn-nav:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* ══════════════════════════════
+       HERO
+    ══════════════════════════════ */
+    .hero {
+      min-height: calc(100vh - 64px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 40px 60px;
     }
 
-    /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
+    .hero-inner {
+      max-width: 700px;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       text-align: center;
-      padding: 100px 24px 80px;
-      position: relative;
+      gap: 0;
     }
 
-    .hero-glow {
-      position: absolute;
-      top: 20%; left: 50%;
-      transform: translateX(-50%);
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(74,158,255,0.08) 0%, transparent 65%);
-      pointer-events: none;
-    }
-
-    .dokka-bubble {
-      display: flex;
-      align-items: flex-end;
-      gap: 16px;
-      margin-bottom: 32px;
-      animation: floatIn 0.8s ease both;
-    }
-
-    .speech-bubble {
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 18px 18px 18px 4px;
-      padding: 14px 20px;
-      font-size: 15px;
-      color: var(--text-secondary);
-      max-width: 220px;
-      text-align: left;
-      line-height: 1.5;
-    }
-
-    /* ✅ Dokka character image — hero */
-    .dokka-sprite {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
-      image-rendering: pixelated;
-      filter: drop-shadow(0 0 22px rgba(74,158,255,0.5));
-      animation: dokkaFloat 3s ease-in-out infinite;
-    }
-
-    @keyframes dokkaFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .hero-badge {
+    /* badge */
+    .badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(245, 166, 35, 0.12);
-      border: 1px solid rgba(245, 166, 35, 0.3);
+      gap: 7px;
+      background: rgba(245,166,35,0.1);
+      border: 1px solid rgba(245,166,35,0.28);
       border-radius: 50px;
-      padding: 6px 16px;
-      font-size: 12px;
-      color: var(--accent-orange);
-      font-weight: 600;
-      letter-spacing: 1px;
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 20px;
-      animation: floatIn 0.6s ease both;
+      margin-bottom: 28px;
+      animation: fadeUp 0.5s ease both;
     }
 
     .badge-dot {
-      width: 6px; height: 6px;
-      background: var(--accent-orange);
+      width: 5px; height: 5px;
+      background: var(--orange);
       border-radius: 50%;
-      animation: pulse 2s infinite;
+      animation: blink 2s infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.4); }
+    @keyframes blink {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:0.4; transform:scale(1.5); }
     }
 
+    /* Dokka + bubble */
+    .dokka-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 30px;
+      animation: fadeUp 0.6s ease 0.05s both;
+    }
+
+    .bubble {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 16px 16px 16px 4px;
+      padding: 13px 18px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.55;
+      text-align: left;
+      max-width: 200px;
+    }
+
+    /* big Dokka SVG */
+    .dokka-big { width: 88px; height: 88px; flex-shrink: 0; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 0 18px rgba(74,158,255,0.45)); }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-9px); }
+    }
+
+    /* headline */
     .hero h1 {
       font-family: 'Syne', sans-serif;
-      font-size: clamp(52px, 9vw, 110px);
+      font-size: clamp(58px, 10vw, 108px);
       font-weight: 800;
-      line-height: 0.95;
-      letter-spacing: -3px;
-      margin-bottom: 8px;
-      animation: floatIn 0.7s ease 0.1s both;
+      line-height: 0.92;
+      letter-spacing: -4px;
+      margin-bottom: 6px;
+      animation: fadeUp 0.6s ease 0.1s both;
     }
 
-    .hero h1 .hub { color: #fff; }
-    .hero h1 .inc { color: var(--accent-orange); }
+    .hero h1 .inc { color: var(--orange); }
 
-    .hero-sub {
-      font-size: 18px;
-      color: var(--text-secondary);
+    .hero-tagline {
+      font-size: 17px;
+      color: var(--muted);
       font-weight: 300;
-      letter-spacing: 1px;
-      margin-bottom: 40px;
-      animation: floatIn 0.7s ease 0.2s both;
+      letter-spacing: 1.2px;
+      margin-bottom: 18px;
+      animation: fadeUp 0.6s ease 0.15s both;
     }
 
     .hero-desc {
-      max-width: 560px;
-      font-size: 16px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 52px;
-      animation: floatIn 0.7s ease 0.3s both;
+      max-width: 520px;
+      font-size: 15.5px;
+      color: var(--muted);
+      line-height: 1.72;
+      margin-bottom: 44px;
+      animation: fadeUp 0.6s ease 0.2s both;
     }
 
-    .download-group {
+    /* download buttons */
+    .dl-group {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
-      animation: floatIn 0.7s ease 0.4s both;
+      gap: 14px;
+      animation: fadeUp 0.6s ease 0.25s both;
     }
 
-    .download-buttons {
+    .dl-row {
       display: flex;
-      gap: 16px;
+      gap: 14px;
       flex-wrap: wrap;
       justify-content: center;
     }
 
     .dl-btn {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px 28px;
-      border-radius: 16px;
+      gap: 11px;
+      padding: 13px 26px;
+      border-radius: 14px;
       text-decoration: none;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
-      transition: all 0.25s ease;
-      border: 1.5px solid;
-      min-width: 180px;
+      border: 1.5px solid transparent;
+      transition: all 0.22s ease;
+      min-width: 170px;
     }
 
-    .dl-btn-primary {
-      background: linear-gradient(135deg, var(--accent-orange), #d4780f);
-      border-color: transparent;
-      color: #fff;
-      box-shadow: 0 8px 32px rgba(245,166,35,0.3);
+    .dl-btn-apk {
+      background: linear-gradient(135deg, var(--orange), var(--orange-dim));
+      color: var(--white);
+      box-shadow: 0 6px 28px rgba(245,166,35,0.28);
     }
+    .dl-btn-apk:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(245,166,35,0.4); }
 
-    .dl-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(245,166,35,0.45); }
-
-    .dl-btn-secondary {
-      background: rgba(255,255,255,0.05);
-      border-color: rgba(255,255,255,0.15);
-      color: #fff;
-      backdrop-filter: blur(10px);
+    .dl-btn-ios {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.13);
+      color: var(--white);
     }
+    .dl-btn-ios:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.22); transform: translateY(-2px); }
 
-    .dl-btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); transform: translateY(-3px); }
+    .dl-icon { font-size: 20px; line-height: 1; }
+    .dl-text { text-align: left; }
+    .dl-text small { display: block; font-size: 9.5px; font-weight: 400; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.9px; }
+    .dl-text strong { font-size: 14px; }
 
-    .dl-btn-icon { font-size: 22px; }
-    .dl-btn-text { text-align: left; }
-    .dl-btn-text small { display: block; font-size: 10px; font-weight: 400; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.8px; }
-    .dl-btn-text strong { font-size: 15px; }
+    .ver { font-size: 11.5px; color: var(--faint); letter-spacing: 0.4px; }
 
-    .version-tag { font-size: 12px; color: var(--text-muted); letter-spacing: 0.5px; }
-
-    /* ── PHONE MOCKUPS ── */
-    .mockup-section {
+    /* ══════════════════════════════
+       MOCKUPS
+    ══════════════════════════════ */
+    .mockups {
+      padding: 10px 40px 80px;
       display: flex;
       justify-content: center;
-      padding: 20px 24px 80px;
-      gap: 24px;
+      gap: 20px;
       flex-wrap: wrap;
     }
 
-    .phone-frame {
-      width: 240px; height: 480px;
-      border-radius: 36px;
-      border: 2px solid rgba(74,158,255,0.2);
-      background: var(--navy-mid);
+    .phone {
+      width: 228px;
+      height: 460px;
+      border-radius: 32px;
+      border: 1.5px solid rgba(74,158,255,0.18);
+      background: var(--bg-mid);
       overflow: hidden;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(74,158,255,0.06);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 32px 72px rgba(0,0,0,0.65);
       position: relative;
-      transition: transform 0.4s ease;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      flex-shrink: 0;
     }
 
-    .phone-frame:hover { transform: translateY(-8px) rotate(-1deg); }
-    .phone-frame:nth-child(2) { transform: translateY(30px); }
-    .phone-frame:nth-child(2):hover { transform: translateY(22px) rotate(1deg); }
-    .phone-frame:nth-child(3) { transform: translateY(15px); }
-    .phone-frame:nth-child(3):hover { transform: translateY(7px) rotate(-0.5deg); }
+    .phone:hover { box-shadow: 0 0 0 1px rgba(74,158,255,0.15), 0 40px 80px rgba(0,0,0,0.7), 0 0 40px rgba(74,158,255,0.07); }
+    .phone:nth-child(1):hover { transform: translateY(-6px) rotate(-1.2deg); }
+    .phone:nth-child(2) { transform: translateY(28px); }
+    .phone:nth-child(2):hover { transform: translateY(20px) rotate(1deg); }
+    .phone:nth-child(3) { transform: translateY(14px); }
+    .phone:nth-child(3):hover { transform: translateY(6px) rotate(-0.8deg); }
 
-    .phone-screen {
+    .pscreen {
       width: 100%; height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      background: linear-gradient(160deg, #0c1e3d 0%, #060e1f 100%);
+      padding: 18px;
+      background: linear-gradient(155deg, #0b1d3a 0%, #05101f 100%);
       position: relative;
       overflow: hidden;
     }
 
-    .ps-clouds {
+    .pcloud {
       position: absolute;
       bottom: 0; left: 0;
-      width: 100%; height: 40%;
-      background: radial-gradient(ellipse 150% 80% at 50% 130%, rgba(12,30,65,0.9) 0%, transparent 70%);
+      width: 100%; height: 38%;
+      background: radial-gradient(ellipse 160% 90% at 50% 132%, rgba(10,26,60,0.95) 0%, transparent 68%);
+      pointer-events: none;
     }
 
-    .ps-login-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: 3px; margin-bottom: 4px; position: relative; z-index: 2; }
-    .ps-login-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 16px; position: relative; z-index: 2; }
+    /* phone screen elements */
+    .p-title { font-family:'Syne',sans-serif; font-size:26px; font-weight:800; letter-spacing:3px; position:relative; z-index:2; margin-bottom:3px; }
+    .p-sub   { font-size:9px; color:var(--faint); letter-spacing:1px; position:relative; z-index:2; margin-bottom:14px; }
 
-    .ps-bubble {
+    .p-bubble {
       background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px 10px 10px 2px;
-      padding: 8px 12px;
-      font-size: 10px;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-      position: relative;
-      z-index: 2;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 9px 9px 9px 2px;
+      padding: 7px 10px;
+      font-size: 9.5px;
+      color: var(--muted);
       align-self: flex-start;
-    }
-
-    /* ✅ Dokka inside phone mockup */
-    .ps-mini-dokka {
-      width: 48px;
-      height: 48px;
-      object-fit: contain;
-      image-rendering: pixelated;
       position: relative;
       z-index: 2;
-      align-self: flex-end;
-      margin-top: -16px;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 0 6px rgba(74,158,255,0.4));
+      margin-bottom: 6px;
+      line-height: 1.45;
     }
 
-    .ps-field {
+    .p-dokka { width:40px; height:40px; align-self:flex-end; position:relative; z-index:2; margin-top:-14px; margin-bottom:10px; animation:float 3s ease-in-out infinite; }
+
+    .p-field {
       width: 100%;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 9.5px;
+      color: var(--faint);
+      margin-bottom: 7px;
       position: relative;
       z-index: 2;
     }
 
-    .ps-login-btn {
+    .p-login-btn {
       width: 100%;
-      background: linear-gradient(135deg, rgba(74,158,255,0.3), rgba(74,158,255,0.1));
-      border: 1px solid rgba(74,158,255,0.3);
-      border-radius: 12px;
-      padding: 10px;
+      background: linear-gradient(135deg, rgba(74,158,255,0.25), rgba(74,158,255,0.1));
+      border: 1px solid rgba(74,158,255,0.28);
+      border-radius: 10px;
+      padding: 9px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--white);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .p-hdr { align-self:flex-start; position:relative; z-index:2; margin-bottom:10px; }
+    .p-hdr h4 { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; }
+    .p-hdr span { font-size:8.5px; color:var(--orange); }
+
+    .p-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:7px; width:100%; position:relative; z-index:2; margin-bottom:10px; }
+    .p-card { background:rgba(255,255,255,0.055); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:9px; font-size:8.5px; }
+    .p-card-ic { font-size:14px; margin-bottom:3px; }
+    .p-card-lbl { color:var(--muted); }
+    .p-card-val { font-weight:700; font-size:10px; }
+
+    .p-sec-lbl { font-size:8px; font-weight:700; color:var(--faint); align-self:flex-start; position:relative; z-index:2; margin-bottom:5px; text-transform:uppercase; letter-spacing:0.5px; }
+    .p-actions { display:grid; grid-template-columns:1fr 1fr; gap:7px; width:100%; position:relative; z-index:2; }
+    .p-act { background:rgba(255,255,255,0.045); border:1px solid rgba(255,255,255,0.065); border-radius:10px; padding:9px; text-align:center; }
+    .p-act-ic { font-size:17px; display:block; margin-bottom:3px; }
+    .p-act-nm { font-size:8.5px; color:var(--muted); }
+
+    .p-tt-hdr { align-self:flex-start; position:relative; z-index:2; margin-bottom:10px; }
+    .p-tt-hdr h4 { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; }
+    .p-tt-hdr span { font-size:8px; color:var(--faint); }
+
+    .p-tt-card { width:100%; background:rgba(255,255,255,0.045); border:1px solid rgba(255,255,255,0.075); border-radius:10px; padding:9px; position:relative; z-index:2; margin-bottom:7px; }
+    .p-badge { display:inline-block; border-radius:5px; padding:1.5px 5px; font-size:6.5px; font-weight:700; margin-bottom:3px; }
+    .badge-org { background:var(--orange); }
+    .badge-blue { background:var(--blue); }
+    .p-subj { font-size:11.5px; font-weight:700; }
+    .p-info  { font-size:7.5px; color:var(--faint); margin-top:2px; }
+
+    /* ══════════════════════════════
+       FEATURES
+    ══════════════════════════════ */
+    .features {
+      padding: 80px 0;
+    }
+
+    .features .container { }
+
+    .sec-eyebrow {
       font-size: 11px;
       font-weight: 700;
-      color: #fff;
-      text-align: center;
-      margin-top: 4px;
-      position: relative;
-      z-index: 2;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--orange);
+      margin-bottom: 10px;
     }
 
-    .ps-home-header { align-self: flex-start; position: relative; z-index: 2; margin-bottom: 12px; }
-    .ps-home-header h3 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; }
-    .ps-home-header p { font-size: 9px; color: var(--accent-orange); }
+    .sec-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 3.5vw, 46px);
+      font-weight: 800;
+      line-height: 1.08;
+      margin-bottom: 52px;
+    }
 
-    .ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; position: relative; z-index: 2; margin-bottom: 12px; }
-    .ps-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px; font-size: 9px; }
-    .ps-card-icon { font-size: 16px; margin-bottom: 4px; }
-    .ps-card-label { color: var(--text-secondary); }
-    .ps-card-val { font-weight: 700; font-size: 11px; }
-
-    .ps-actions-label { font-size: 9px; font-weight: 600; color: var(--text-muted); align-self: flex-start; position: relative; z-index: 2; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
-    .ps-action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; position: relative; z-index: 2; }
-    .ps-action { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 10px; text-align: center; }
-    .ps-action-icon { font-size: 18px; display: block; margin-bottom: 4px; }
-    .ps-action-name { font-size: 9px; color: var(--text-secondary); }
-
-    .ps-tt-header { align-self: flex-start; position: relative; z-index: 2; margin-bottom: 12px; }
-    .ps-tt-header h3 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; }
-    .ps-tt-header p { font-size: 8px; color: var(--text-muted); }
-
-    .ps-tt-card { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px; position: relative; z-index: 2; margin-bottom: 8px; }
-    .ps-tt-badge { display: inline-block; background: var(--accent-orange); border-radius: 6px; padding: 2px 6px; font-size: 7px; font-weight: 700; margin-bottom: 4px; }
-    .ps-tt-subject { font-size: 12px; font-weight: 700; }
-    .ps-tt-info { font-size: 8px; color: var(--text-muted); margin-top: 2px; }
-
-    /* ── FEATURES ── */
-    .features { padding: 80px 60px; max-width: 1200px; margin: 0 auto; }
-    .section-label { font-size: 12px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-orange); font-weight: 600; margin-bottom: 12px; }
-    .section-title { font-family: 'Syne', sans-serif; font-size: clamp(32px, 4vw, 52px); font-weight: 800; line-height: 1.1; margin-bottom: 60px; }
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
 
     .feat-card {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 24px;
-      padding: 32px;
-      backdrop-filter: blur(16px);
-      transition: all 0.3s ease;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 28px;
+      backdrop-filter: blur(14px);
       position: relative;
       overflow: hidden;
+      transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
     }
 
-    .feat-card::before {
+    .feat-card::after {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(74,158,255,0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(74,158,255,0.35), transparent);
     }
 
-    .feat-card:hover { transform: translateY(-4px); border-color: rgba(74,158,255,0.3); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .feat-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(74,158,255,0.28);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.35);
+    }
 
-    .feat-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
-    .feat-icon-orange { background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.2); }
-    .feat-icon-blue { background: rgba(74,158,255,0.12); border: 1px solid rgba(74,158,255,0.2); }
-    .feat-icon-green { background: rgba(52,211,153,0.12); border: 1px solid rgba(52,211,153,0.2); }
-    .feat-icon-purple { background: rgba(167,139,250,0.12); border: 1px solid rgba(167,139,250,0.2); }
-    .feat-card h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-    .feat-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
+    .feat-ic {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
 
-    /* ── STATS ── */
-    .stats-section { padding: 60px; max-width: 1200px; margin: 0 auto; }
-    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 2px; background: rgba(74,158,255,0.06); border-radius: 24px; border: 1px solid rgba(74,158,255,0.12); overflow: hidden; }
-    .stat-item { padding: 40px 32px; text-align: center; background: var(--navy-mid); transition: background 0.3s; }
-    .stat-item:hover { background: rgba(74,158,255,0.05); }
-    .stat-num { font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800; color: var(--accent-blue-bright); line-height: 1; }
-    .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .ic-o { background: rgba(245,166,35,0.13); border: 1px solid rgba(245,166,35,0.2); }
+    .ic-b { background: rgba(74,158,255,0.11); border: 1px solid rgba(74,158,255,0.2); }
+    .ic-g { background: rgba(52,211,153,0.11); border: 1px solid rgba(52,211,153,0.2); }
+    .ic-p { background: rgba(167,139,250,0.11); border: 1px solid rgba(167,139,250,0.2); }
 
-    /* ── CTA ── */
-    .cta-section { padding: 80px 24px; text-align: center; position: relative; }
-    .cta-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; height: 400px; background: radial-gradient(ellipse, rgba(245,166,35,0.05) 0%, transparent 65%); pointer-events: none; }
+    .feat-card h3 { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; margin-bottom:8px; }
+    .feat-card p  { font-size:13.5px; color:var(--muted); line-height:1.65; }
+
+    /* ══════════════════════════════
+       STATS
+    ══════════════════════════════ */
+    .stats { padding: 0 0 80px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-radius: var(--radius-card);
+      border: 1px solid rgba(74,158,255,0.1);
+      overflow: hidden;
+      background: rgba(74,158,255,0.04);
+      gap: 1px;
+    }
+
+    .stat {
+      padding: 38px 28px;
+      text-align: center;
+      background: var(--bg-mid);
+      transition: background 0.25s;
+    }
+    .stat:hover { background: rgba(74,158,255,0.06); }
+
+    .stat-n { font-family:'Syne',sans-serif; font-size:40px; font-weight:800; color:var(--blue-bright); line-height:1; }
+    .stat-l { font-size:11px; color:var(--faint); margin-top:7px; text-transform:uppercase; letter-spacing:1.1px; }
+
+    /* ══════════════════════════════
+       CTA
+    ══════════════════════════════ */
+    .cta { padding: 80px 40px; }
 
     .cta-box {
-      max-width: 680px;
+      max-width: 640px;
       margin: 0 auto;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 32px;
-      padding: 60px 48px;
-      backdrop-filter: blur(20px);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 56px 44px;
+      text-align: center;
+      backdrop-filter: blur(18px);
       position: relative;
+      overflow: hidden;
     }
 
-    .cta-box::before { content: ''; position: absolute; inset: 0; border-radius: 32px; background: linear-gradient(135deg, rgba(74,158,255,0.04), rgba(245,166,35,0.03)); pointer-events: none; }
-
-    /* ✅ CTA Dokka image */
-    .cta-dokka {
-      width: 96px;
-      height: 96px;
-      object-fit: contain;
-      image-rendering: pixelated;
-      display: block;
-      margin: 0 auto 20px;
-      filter: drop-shadow(0 0 24px rgba(74,158,255,0.5));
-      animation: dokkaFloat 3s ease-in-out infinite;
+    .cta-box::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius:28px;
+      background: linear-gradient(135deg, rgba(74,158,255,0.04) 0%, rgba(245,166,35,0.03) 100%);
+      pointer-events:none;
     }
 
-    .cta-box h2 { font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800; margin-bottom: 14px; line-height: 1.1; }
-    .cta-box p { color: var(--text-secondary); font-size: 16px; line-height: 1.6; margin-bottom: 40px; }
+    .cta-box::after {
+      content:'';
+      position:absolute;
+      top:0; left:0; right:0;
+      height:1px;
+      background: linear-gradient(90deg, transparent, rgba(74,158,255,0.3), transparent);
+    }
 
-    /* ── FOOTER ── */
+    .cta-dokka { width:80px; height:80px; display:block; margin:0 auto 18px; animation:float 3s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(74,158,255,0.5)); }
+    .cta-box h2 { font-family:'Syne',sans-serif; font-size:clamp(28px,4vw,40px); font-weight:800; margin-bottom:12px; line-height:1.1; }
+    .cta-box > p { font-size:15px; color:var(--muted); line-height:1.65; margin-bottom:36px; }
+
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
     footer {
-      padding: 40px 60px;
-      border-top: 1px solid rgba(255,255,255,0.05);
+      border-top: 1px solid rgba(255,255,255,0.045);
+      padding: 32px 40px;
+    }
+
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -505,287 +587,327 @@
       gap: 12px;
     }
 
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 3px;
+    .footer-logo { display:flex; align-items:center; gap:9px; font-family:'Syne',sans-serif; font-size:16px; font-weight:800; letter-spacing:3px; }
+    .footer-logo .dokka-icon { width:26px; height:26px; }
+    .footer-logo .inc { color:var(--orange); }
+    footer p { font-size:12px; color:var(--faint); }
+
+    /* ══════════════════════════════
+       ANIMATIONS
+    ══════════════════════════════ */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
     }
 
-    /* ✅ Footer Dokka image */
-    .footer-logo img {
-      width: 28px;
-      height: 28px;
-      object-fit: contain;
-      image-rendering: pixelated;
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media (max-width: 900px) {
+      .feat-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
-    .footer-logo span { color: var(--accent-orange); }
-    footer p { font-size: 12px; color: var(--text-muted); }
-
-    @keyframes floatIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 768px) {
-      nav { padding: 18px 24px; }
-      .nav-links { display: none; }
-      .features { padding: 60px 24px; }
-      .stats-section { padding: 40px 24px; }
-      footer { padding: 30px 24px; flex-direction: column; text-align: center; }
-      .phone-frame:nth-child(2), .phone-frame:nth-child(3) { display: none; }
+    @media (max-width: 680px) {
+      .container { padding: 0 20px; }
+      .nav-inner  { padding: 0 20px; }
+      nav .nav-links li:not(:last-child) { display: none; }
+      .hero { padding: 60px 20px 40px; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+      .phone:nth-child(2), .phone:nth-child(3) { display: none; }
+      .cta-box { padding: 40px 24px; }
+      footer { padding: 24px 20px; }
+      .footer-inner { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <canvas id="stars-canvas"></canvas>
-  <div class="cloud-layer"></div>
+<canvas id="stars"></canvas>
+<div class="clouds"></div>
 
-  <div class="page-wrapper">
+<!-- Reusable SVG Dokka mascot — pixel-art sprite drawn inline -->
+<!-- We define it once as a <symbol> and reuse with <use> everywhere -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="dokka" viewBox="0 0 64 64">
+    <!-- body -->
+    <rect x="12" y="22" width="40" height="32" rx="14" fill="#f0e8d0"/>
+    <!-- fur texture top -->
+    <ellipse cx="32" cy="22" rx="20" ry="10" fill="#f0e8d0"/>
+    <!-- face shadow -->
+    <ellipse cx="32" cy="38" rx="14" ry="10" fill="#ddd0b0" opacity="0.4"/>
+    <!-- left horn -->
+    <polygon points="18,22 14,8 22,18" fill="#8b6a3e"/>
+    <polygon points="20,21 17,9 24,18" fill="#a07840"/>
+    <!-- right horn -->
+    <polygon points="46,22 50,8 42,18" fill="#8b6a3e"/>
+    <polygon points="44,21 47,9 40,18" fill="#a07840"/>
+    <!-- left eye -->
+    <rect x="21" y="30" width="8" height="8" rx="1" fill="#1a1a1a"/>
+    <rect x="22" y="31" width="3" height="3" rx="0.5" fill="#ffffff" opacity="0.6"/>
+    <!-- right eye -->
+    <rect x="35" y="30" width="8" height="8" rx="1" fill="#1a1a1a"/>
+    <rect x="36" y="31" width="3" height="3" rx="0.5" fill="#ffffff" opacity="0.6"/>
+    <!-- nose/mouth -->
+    <rect x="29" y="40" width="6" height="3" rx="1.5" fill="#c0a070"/>
+    <!-- bottom teeth -->
+    <rect x="28" y="43" width="3" height="4" rx="1" fill="#ffffff"/>
+    <rect x="33" y="43" width="3" height="4" rx="1" fill="#ffffff"/>
+    <!-- fur detail lines -->
+    <line x1="16" y1="26" x2="12" y2="22" stroke="#d8c8a0" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="18" y1="24" x2="14" y2="18" stroke="#d8c8a0" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="48" y1="26" x2="52" y2="22" stroke="#d8c8a0" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="46" y1="24" x2="50" y2="18" stroke="#d8c8a0" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- left arm -->
+    <ellipse cx="11" cy="38" rx="5" ry="8" rx2="5" fill="#e8d8b8" transform="rotate(-15 11 38)"/>
+    <!-- right arm -->
+    <ellipse cx="53" cy="38" rx="5" ry="8" fill="#e8d8b8" transform="rotate(15 53 38)"/>
+  </symbol>
+</svg>
 
-    <!-- NAV -->
-    <nav>
+<div class="wrap">
+
+  <!-- ── NAV ── -->
+  <nav>
+    <div class="nav-inner">
       <a href="#" class="nav-logo">
-        <img src="character.png" alt="Dokka" />
-        HUB<span>INC</span>
+        <svg class="dokka-icon" viewBox="0 0 64 64"><use href="#dokka"/></svg>
+        HUB<span class="inc">INC</span>
       </a>
       <ul class="nav-links">
         <li><a href="#features">Features</a></li>
         <li><a href="#screenshots">Screenshots</a></li>
         <li><a href="#download">Download</a></li>
-        <li><a href="#download" class="nav-cta">Get the App</a></li>
+        <li><a href="#download" class="btn-nav">Get the App</a></li>
       </ul>
-    </nav>
+    </div>
+  </nav>
 
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-glow"></div>
+  <!-- ── HERO ── -->
+  <section class="hero" id="top">
+    <div class="hero-inner">
 
-      <div class="hero-badge">
+      <div class="badge">
         <span class="badge-dot"></span>
         Now Available
       </div>
 
-      <div class="dokka-bubble">
-        <div class="speech-bubble">Hi! I'm Dokka.<br/>Time to Explore! 🚀</div>
-        <!-- ✅ Real Dokka character -->
-        <img src="character.png" alt="Dokka mascot" class="dokka-sprite" />
+      <div class="dokka-row">
+        <div class="bubble">Hi! I'm Dokka.<br/>Time to Explore! 🚀</div>
+        <svg class="dokka-big" viewBox="0 0 64 64"><use href="#dokka"/></svg>
       </div>
 
-      <h1><span class="hub">HUB</span><span class="inc">INC</span></h1>
-      <p class="hero-sub">Time to Explore!</p>
+      <h1>HUB<span class="inc">INC</span></h1>
+      <p class="hero-tagline">Time to Explore!</p>
 
       <p class="hero-desc">
-        Your all-in-one academic companion. Manage subjects, track timetables, view attendance, download materials, and stay on top of announcements — all in one beautifully crafted app.
+        Your all-in-one academic companion. Manage subjects, track timetables, view attendance, download materials, and stay on top of announcements — beautifully crafted for students.
       </p>
 
-      <div class="download-group" id="download">
-        <div class="download-buttons">
-          <a href="#" class="dl-btn dl-btn-primary">
-            <span class="dl-btn-icon">📱</span>
-            <span class="dl-btn-text">
+      <div class="dl-group" id="download">
+        <div class="dl-row">
+          <a href="#" class="dl-btn dl-btn-apk">
+            <span class="dl-icon">📱</span>
+            <span class="dl-text">
               <small>Download for</small>
               <strong>Android APK</strong>
             </span>
           </a>
-          <a href="#" class="dl-btn dl-btn-secondary">
-            <span class="dl-btn-icon">🍎</span>
-            <span class="dl-btn-text">
+          <a href="#" class="dl-btn dl-btn-ios">
+            <span class="dl-icon">🍎</span>
+            <span class="dl-text">
               <small>Coming Soon</small>
               <strong>App Store</strong>
             </span>
           </a>
         </div>
-        <p class="version-tag">v1.0.0 · Free · No ads</p>
+        <span class="ver">v1.0.0 &nbsp;·&nbsp; Free &nbsp;·&nbsp; No ads</span>
       </div>
-    </section>
 
-    <!-- PHONE MOCKUPS -->
-    <div class="mockup-section" id="screenshots">
+    </div>
+  </section>
 
-      <!-- Phone 1: Login -->
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div class="ps-clouds"></div>
-          <p class="ps-login-title">HUB</p>
-          <p class="ps-login-sub">Time to Explore!</p>
-          <div class="ps-bubble">Hi! I'm Dokka, Here to help.</div>
-          <img src="character.png" alt="Dokka" class="ps-mini-dokka" />
-          <div class="ps-field">🪪 Registration No.</div>
-          <div class="ps-field">🔒 Password</div>
-          <div class="ps-login-btn">Login</div>
+  <!-- ── MOCKUPS ── -->
+  <div class="mockups" id="screenshots">
+
+    <!-- Phone 1: Login -->
+    <div class="phone">
+      <div class="pscreen">
+        <div class="pcloud"></div>
+        <p class="p-title">HUB</p>
+        <p class="p-sub">Time to Explore!</p>
+        <div class="p-bubble">Hi! I'm Dokka,<br/>Here to help.</div>
+        <svg class="p-dokka" viewBox="0 0 64 64"><use href="#dokka"/></svg>
+        <div class="p-field">🪪&nbsp; Registration No.</div>
+        <div class="p-field">🔒&nbsp; Password</div>
+        <div class="p-login-btn">Login</div>
+      </div>
+    </div>
+
+    <!-- Phone 2: Home -->
+    <div class="phone">
+      <div class="pscreen">
+        <div class="pcloud"></div>
+        <div class="p-hdr">
+          <h4>Hey, User 👋</h4>
+          <span>Admin Panel</span>
         </div>
-      </div>
-
-      <!-- Phone 2: Home -->
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div class="ps-clouds"></div>
-          <div class="ps-home-header">
-            <h3>Hey, User 👋</h3>
-            <p>Admin Panel</p>
-          </div>
-          <div class="ps-grid">
-            <div class="ps-card"><div class="ps-card-icon">📅</div><div class="ps-card-label">Today</div><div class="ps-card-val">Wed</div></div>
-            <div class="ps-card"><div class="ps-card-icon">🕐</div><div class="ps-card-label">Time</div><div class="ps-card-val">5:05 PM</div></div>
-            <div class="ps-card"><div class="ps-card-icon">📝</div><div class="ps-card-label">Quick Notes</div><div class="ps-card-val">—</div></div>
-            <div class="ps-card"><div class="ps-card-icon">📁</div><div class="ps-card-label">Materials</div><div class="ps-card-val">—</div></div>
-          </div>
-          <p class="ps-actions-label">Quick Actions</p>
-          <div class="ps-action-grid">
-            <div class="ps-action"><span class="ps-action-icon">📚</span><span class="ps-action-name">Subjects</span></div>
-            <div class="ps-action"><span class="ps-action-icon">🗓️</span><span class="ps-action-name">Timetable</span></div>
-            <div class="ps-action"><span class="ps-action-icon">📢</span><span class="ps-action-name">Announce</span></div>
-            <div class="ps-action"><span class="ps-action-icon">✅</span><span class="ps-action-name">Attendance</span></div>
-          </div>
+        <div class="p-grid2">
+          <div class="p-card"><div class="p-card-ic">📅</div><div class="p-card-lbl">Today</div><div class="p-card-val">Wed</div></div>
+          <div class="p-card"><div class="p-card-ic">🕐</div><div class="p-card-lbl">Time</div><div class="p-card-val">5:05 PM</div></div>
+          <div class="p-card"><div class="p-card-ic">📝</div><div class="p-card-lbl">Notes</div><div class="p-card-val">—</div></div>
+          <div class="p-card"><div class="p-card-ic">📁</div><div class="p-card-lbl">Materials</div><div class="p-card-val">—</div></div>
         </div>
-      </div>
-
-      <!-- Phone 3: Timetable -->
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div class="ps-clouds"></div>
-          <div class="ps-tt-header">
-            <h3>Timetable</h3>
-            <p>VI-AI · Advance Computing</p>
-          </div>
-          <div class="ps-tt-card">
-            <div class="ps-tt-badge">CAI</div>
-            <div class="ps-tt-subject">NSP</div>
-            <div class="ps-tt-info">👤 Mr. Rahul Raj · 8:00 - 9:00</div>
-          </div>
-          <div class="ps-tt-card">
-            <div class="ps-tt-badge" style="background:#4a9eff;">6CAI402</div>
-            <div class="ps-tt-subject">ML</div>
-            <div class="ps-tt-info">👤 Ms. Reena Sharma · 9:00 - 10:00</div>
-          </div>
-          <div class="ps-tt-card">
-            <div class="ps-tt-badge">6CAI421</div>
-            <div class="ps-tt-subject">DIP LAB</div>
-            <div class="ps-tt-info">👤 Ms. Anjuli Dubey · 2209E</div>
-          </div>
+        <p class="p-sec-lbl">Quick Actions</p>
+        <div class="p-actions">
+          <div class="p-act"><span class="p-act-ic">📚</span><span class="p-act-nm">Subjects</span></div>
+          <div class="p-act"><span class="p-act-ic">🗓️</span><span class="p-act-nm">Timetable</span></div>
+          <div class="p-act"><span class="p-act-ic">📢</span><span class="p-act-nm">Announce</span></div>
+          <div class="p-act"><span class="p-act-ic">✅</span><span class="p-act-nm">Attendance</span></div>
         </div>
       </div>
     </div>
 
-    <!-- FEATURES -->
-    <section class="features" id="features">
-      <p class="section-label">What's Inside</p>
-      <h2 class="section-title">Everything you need,<br/>all in one place.</h2>
-      <div class="features-grid">
-        <div class="feat-card"><div class="feat-icon feat-icon-orange">🗓️</div><h3>Smart Timetable</h3><p>View your weekly class schedule at a glance. Know exactly where to be, when to be there, and who's teaching — all beautifully organized.</p></div>
-        <div class="feat-card"><div class="feat-icon feat-icon-blue">📚</div><h3>Subject Manager</h3><p>Keep all your subjects organized by semester. Add, edit, and manage your courses from a clean, searchable interface.</p></div>
-        <div class="feat-card"><div class="feat-icon feat-icon-green">✅</div><h3>Attendance Tracking</h3><p>Stay on top of your attendance. Mark, monitor, and get insights so you never fall short of the required percentage.</p></div>
-        <div class="feat-card"><div class="feat-icon feat-icon-purple">📢</div><h3>Announcements</h3><p>Admins can push important notices directly to students. Never miss a critical update, exam schedule, or campus event again.</p></div>
-        <div class="feat-card"><div class="feat-icon feat-icon-orange">📁</div><h3>My Materials</h3><p>Access and download your study materials securely within the app. Everything stored privately, available whenever you need it.</p></div>
-        <div class="feat-card"><div class="feat-icon feat-icon-blue">📝</div><h3>Quick Notes</h3><p>Jot down ideas, reminders, and important points on the fly. Your personal scratchpad, always a tap away.</p></div>
-      </div>
-    </section>
-
-    <!-- STATS -->
-    <div class="stats-section">
-      <div class="stats-row">
-        <div class="stat-item"><div class="stat-num">6+</div><div class="stat-label">Core Features</div></div>
-        <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">User Roles</div></div>
-        <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">Subjects Supported</div></div>
-        <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">Ads. Ever.</div></div>
-      </div>
-    </div>
-
-    <!-- CTA -->
-    <section class="cta-section">
-      <div class="cta-glow"></div>
-      <div class="cta-box">
-        <img src="character.png" alt="Dokka" class="cta-dokka" />
-        <h2>Ready to explore?</h2>
-        <p>Download HubInc today and transform the way you manage your academic life. Dokka's waiting for you.</p>
-        <div class="download-buttons" style="justify-content:center;">
-          <a href="#" class="dl-btn dl-btn-primary">
-            <span class="dl-btn-icon">📱</span>
-            <span class="dl-btn-text"><small>Download APK</small><strong>Android</strong></span>
-          </a>
-          <a href="#" class="dl-btn dl-btn-secondary">
-            <span class="dl-btn-icon">🍎</span>
-            <span class="dl-btn-text"><small>Coming Soon</small><strong>iOS</strong></span>
-          </a>
+    <!-- Phone 3: Timetable -->
+    <div class="phone">
+      <div class="pscreen">
+        <div class="pcloud"></div>
+        <div class="p-tt-hdr">
+          <h4>Timetable</h4>
+          <span>VI-AI · Advance Computing</span>
+        </div>
+        <div class="p-tt-card">
+          <div class="p-badge badge-org">CAI</div>
+          <div class="p-subj">NSP</div>
+          <div class="p-info">👤 Mr. Rahul Raj · 8:00–9:00</div>
+        </div>
+        <div class="p-tt-card">
+          <div class="p-badge badge-blue">6CAI402</div>
+          <div class="p-subj">ML</div>
+          <div class="p-info">👤 Ms. Reena Sharma · 9:00–10:00</div>
+        </div>
+        <div class="p-tt-card">
+          <div class="p-badge badge-org">6CAI421</div>
+          <div class="p-subj">DIP LAB</div>
+          <div class="p-info">👤 Ms. Anjuli Dubey · 2209E</div>
         </div>
       </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-      <div class="footer-logo">
-        <img src="character.png" alt="Dokka" />
-        HUB<span>INC</span>
-      </div>
-      <p>© 2026 HubInc. Built with ❤️ for students. MKM❤️</p>
-      <p style="color:var(--text-muted);font-size:12px;">Made by Mitanshu</p>
-    </footer>
+    </div>
 
   </div>
 
-  <script>
-    const canvas = document.getElementById('stars-canvas');
-    const ctx = canvas.getContext('2d');
-    let stars = [];
+  <!-- ── FEATURES ── -->
+  <section class="features" id="features">
+    <div class="container">
+      <p class="sec-eyebrow">What's Inside</p>
+      <h2 class="sec-title">Everything you need,<br/>all in one place.</h2>
+      <div class="feat-grid">
+        <div class="feat-card"><div class="feat-ic ic-o">🗓️</div><h3>Smart Timetable</h3><p>View your full weekly schedule at a glance — who's teaching, where, and when. Always organized, never missed.</p></div>
+        <div class="feat-card"><div class="feat-ic ic-b">📚</div><h3>Subject Manager</h3><p>Organize subjects by semester with a clean, searchable interface. Add, edit, and manage everything in one place.</p></div>
+        <div class="feat-card"><div class="feat-ic ic-g">✅</div><h3>Attendance Tracking</h3><p>Mark and monitor your attendance, get insights, and never fall below the required threshold again.</p></div>
+        <div class="feat-card"><div class="feat-ic ic-p">📢</div><h3>Announcements</h3><p>Admins push notices directly to students. No more missed exams, schedule changes, or campus events.</p></div>
+        <div class="feat-card"><div class="feat-ic ic-o">📁</div><h3>My Materials</h3><p>Download and access study materials securely inside the app. Private, organized, always available offline.</p></div>
+        <div class="feat-card"><div class="feat-ic ic-b">📝</div><h3>Quick Notes</h3><p>A personal scratchpad that's always a tap away. Capture ideas, reminders, and key points instantly.</p></div>
+      </div>
+    </div>
+  </section>
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+  <!-- ── STATS ── -->
+  <section class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat"><div class="stat-n">6+</div><div class="stat-l">Core Features</div></div>
+        <div class="stat"><div class="stat-n">2</div><div class="stat-l">User Roles</div></div>
+        <div class="stat"><div class="stat-n">∞</div><div class="stat-l">Subjects Supported</div></div>
+        <div class="stat"><div class="stat-n">0</div><div class="stat-l">Ads. Ever.</div></div>
+      </div>
+    </div>
+  </section>
 
-    function initStars() {
-      stars = [];
-      for (let i = 0; i < 180; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: Math.random() * 1.4,
-          o: Math.random(),
-          speed: 0.002 + Math.random() * 0.004
-        });
-      }
-    }
+  <!-- ── CTA ── -->
+  <section class="cta">
+    <div class="cta-box">
+      <svg class="cta-dokka" viewBox="0 0 64 64"><use href="#dokka"/></svg>
+      <h2>Ready to explore?</h2>
+      <p>Download HubInc and transform the way you manage your academic life. Dokka's waiting for you.</p>
+      <div class="dl-row" style="justify-content:center;">
+        <a href="#" class="dl-btn dl-btn-apk">
+          <span class="dl-icon">📱</span>
+          <span class="dl-text"><small>Download APK</small><strong>Android</strong></span>
+        </a>
+        <a href="#" class="dl-btn dl-btn-ios">
+          <span class="dl-icon">🍎</span>
+          <span class="dl-text"><small>Coming Soon</small><strong>iOS</strong></span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-    function drawStars(t) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      stars.forEach(s => {
-        const opacity = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(t * s.speed * 1000 + s.o * 100));
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(180, 210, 255, ${opacity})`;
-        ctx.fill();
-      });
-    }
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <svg class="dokka-icon" viewBox="0 0 64 64"><use href="#dokka"/></svg>
+        HUB<span class="inc">INC</span>
+      </div>
+      <p>© 2026 HubInc. Built with ❤️ for students. MKM❤️</p>
+      <p>Made by Mitanshu</p>
+    </div>
+  </footer>
 
-    function animate(t) {
-      drawStars(t / 1000);
-      requestAnimationFrame(animate);
-    }
+</div>
 
-    resize(); initStars(); animate(0);
-    window.addEventListener('resize', () => { resize(); initStars(); });
+<script>
+  /* ── Starfield ── */
+  const cvs = document.getElementById('stars');
+  const cx  = cvs.getContext('2d');
+  let stars = [];
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.style.opacity = '1';
-          e.target.style.transform = 'translateY(0)';
-        }
-      });
-    }, { threshold: 0.1 });
+  function resize() {
+    cvs.width  = window.innerWidth;
+    cvs.height = window.innerHeight;
+  }
 
-    document.querySelectorAll('.feat-card, .stat-item').forEach(el => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(20px)';
-      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      observer.observe(el);
+  function seed() {
+    stars = Array.from({ length: 200 }, () => ({
+      x: Math.random() * cvs.width,
+      y: Math.random() * cvs.height,
+      r: Math.random() * 1.3 + 0.2,
+      o: Math.random(),
+      s: 0.0015 + Math.random() * 0.003
+    }));
+  }
+
+  function draw(t) {
+    cx.clearRect(0, 0, cvs.width, cvs.height);
+    stars.forEach(s => {
+      const op = 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(t * s.s * 1000 + s.o * 80));
+      cx.beginPath();
+      cx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      cx.fillStyle = `rgba(190,218,255,${op})`;
+      cx.fill();
     });
-  </script>
+    requestAnimationFrame(draw);
+  }
+
+  resize(); seed(); draw(0);
+  window.addEventListener('resize', () => { resize(); seed(); });
+
+  /* ── Scroll reveal ── */
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.feat-card, .stat, .phone').forEach(el => {
+    el.style.cssText += 'opacity:0;transform:translateY(22px);transition:opacity 0.55s ease,transform 0.55s ease';
+    obs.observe(el);
+  });
+</script>
 </body>
 </html>
